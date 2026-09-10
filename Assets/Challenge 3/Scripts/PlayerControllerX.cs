@@ -26,6 +26,8 @@ public class PlayerControllerX : MonoBehaviour
         playerAudio = GetComponent<AudioSource>();
         floatAction.Enable();
 
+        playerRb = GetComponent<Rigidbody>();
+
         // Apply a small upward force at the start of the game
         playerRb.AddForce(Vector3.up * 5, ForceMode.Impulse);
 
@@ -38,6 +40,15 @@ public class PlayerControllerX : MonoBehaviour
         if (floatAction.IsPressed() && !gameOver)
         {
             playerRb.AddForce(Vector3.up * floatForce);
+            fireworksParticle.Play();
+        }
+        if (transform.position.y > 15 || transform.position.y < 0)
+        {
+            explosionParticle.Play();
+            playerAudio.PlayOneShot(explodeSound, 1.0f);
+            gameOver = true;
+            Debug.Log("Game Over!");
+            Destroy(gameObject);
         }
     }
 
@@ -51,8 +62,7 @@ public class PlayerControllerX : MonoBehaviour
             gameOver = true;
             Debug.Log("Game Over!");
             Destroy(other.gameObject);
-        } 
-
+        }
         // if player collides with money, fireworks
         else if (other.gameObject.CompareTag("Money"))
         {
@@ -61,7 +71,7 @@ public class PlayerControllerX : MonoBehaviour
             Destroy(other.gameObject);
 
         }
-
+        
     }
 
 }
